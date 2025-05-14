@@ -1,0 +1,24 @@
+name: .NET  # Nome do workflow, aparece na interface do GitHub Actions
+
+on:
+  push:
+    branches: [ "main" ]  # Dispara o workflow quando houver um push no branch "main"
+  schedule:
+    - cron: '0 * * * *'   # Agenda o workflow para rodar automaticamente a cada hora (no minuto zero)
+
+jobs:
+  build:                 # Define um job chamado "build"
+    runs-on: ubuntu-latest  # Especifica que o job será executado em um runner com Ubuntu na versão mais recente
+
+    steps:               # Lista de passos que serão executados dentro do job
+    - uses: actions/checkout@v4   # Passo 1: usa uma action oficial do GitHub para fazer checkout do código do repositório
+    - name: Setup .NET             # Passo 2: nomeia o passo para configurar o ambiente .NET
+      uses: actions/setup-dotnet@v4  # Usa a action oficial para instalar o SDK do .NET
+      with:
+        dotnet-version: 8.0.x     # Especifica a versão do SDK .NET a ser instalada (versão 8.0.x)
+
+    - name: Restore dependencies   # Passo 3: nomeia o passo para restaurar as dependências do projeto
+      run: dotnet restore          # Executa o comando personalizado para restaurar pacotes NuGet
+
+    - name: Build                 # Passo 4: nomeia o passo para compilar o projeto
+      run: dotnet build --no-restore  # Executa o comando
